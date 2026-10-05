@@ -1,7 +1,7 @@
 """
 Tab 1: Academic Supply & Skills (Academic Supply Side)
 Visualizes curriculum output, core courses & credit weights,
-graduate employment timelines, and tuition fee structures.
+graduate employment timelines, and tuition fee structures with Crimson Soft Light aesthetics.
 """
 
 import streamlit as st
@@ -9,7 +9,12 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-from utils.theme import apply_dark_theme, COLOR_PRIMARY, COLOR_SECONDARY, COLOR_ACCENT, COLOR_WARNING, COLOR_INFO, PLOTLY_CHART_COLORS
+from utils.theme import (
+    apply_crimson_theme,
+    COLOR_PRIMARY_CRIMSON,
+    COLOR_ACCENT_ROSE,
+    PLOTLY_CHART_COLORS
+)
 from modules.components import render_kpi_card, render_section_header, render_source_caption
 from data.academic_supply import (
     get_academic_curricula_df,
@@ -37,7 +42,7 @@ def render_tab_academic(selected_curricula: list = None):
         badge="Supply Side Intelligence"
     )
     
-    # --- Top KPI Metrics ---
+    # --- Top KPI Metrics (Crimson Soft Light Accents) ---
     total_graduates = int(curricula_df["total_accumulated_graduates"].sum()) if not curricula_df.empty else 0
     avg_tuition = curricula_df["tuition_fee_total_thb"].mean() if not curricula_df.empty else 0
     avg_emp_y1 = (curricula_df["emp_rate_year_1"].mean() * 100) if not curricula_df.empty else 0
@@ -51,7 +56,8 @@ def render_tab_academic(selected_curricula: list = None):
             subtext=f"Across {total_programs} tracked programs",
             icon="🎓",
             delta="+14.2% YoY",
-            delta_type="positive"
+            delta_type="positive",
+            accent_color="crimson"
         )
     with kpi_col2:
         render_kpi_card(
@@ -60,7 +66,8 @@ def render_tab_academic(selected_curricula: list = None):
             subtext="Total degree cost",
             icon="💰",
             delta="THB",
-            delta_type="neutral"
+            delta_type="neutral",
+            accent_color="yellow"
         )
     with kpi_col3:
         render_kpi_card(
@@ -69,16 +76,18 @@ def render_tab_academic(selected_curricula: list = None):
             subtext="First year post-grad",
             icon="💼",
             delta="High Placement",
-            delta_type="positive"
+            delta_type="positive",
+            accent_color="blue"
         )
     with kpi_col4:
         render_kpi_card(
-            title="Tracked Programs",
+            title="Active Programs",
             value=f"{total_programs}",
             subtext="B.Sc. & M.Sc. degrees",
             icon="🏫",
             delta="Accredited",
-            delta_type="neutral"
+            delta_type="neutral",
+            accent_color="pink"
         )
 
     st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
@@ -104,7 +113,7 @@ def render_tab_academic(selected_curricula: list = None):
                 xaxis=dict(type='category'),
                 legend=dict(orientation="h", yanchor="bottom", y=-0.35, xanchor="center", x=0.5)
             )
-            apply_dark_theme(fig_output, source=source_g1, height=440)
+            apply_crimson_theme(fig_output, source=source_g1, height=440)
             st.plotly_chart(fig_output, use_container_width=True)
             render_source_caption(source_g1)
         else:
@@ -123,11 +132,11 @@ def render_tab_academic(selected_curricula: list = None):
                 title="Graph 1.2: Learned Skill Weight (Aggregated Credits)",
                 labels={"credits": "Total Credit Hours Taught", "skill": "Core Skill Competency"},
                 color="credits",
-                color_continuous_scale=["#38bdf8", "#818cf8", "#c084fc"]
+                color_continuous_scale=["#FFDEEB", "#C9184A", "#801235"]
             )
             fig_skills.update_coloraxes(showscale=False)
             fig_skills.update_traces(hovertemplate="<b>%{y}</b><br>Credit Weight: %{x} hrs<extra></extra>")
-            apply_dark_theme(fig_skills, source=source_g2, height=440)
+            apply_crimson_theme(fig_skills, source=source_g2, height=440)
             st.plotly_chart(fig_skills, use_container_width=True)
             render_source_caption(source_g2)
         else:
@@ -161,7 +170,7 @@ def render_tab_academic(selected_curricula: list = None):
             )
             fig_emp.update_yaxes(range=[70, 102])
             fig_emp.update_layout(legend=dict(orientation="h", yanchor="bottom", y=-0.35, xanchor="center", x=0.5))
-            apply_dark_theme(fig_emp, source=source_g3, height=440)
+            apply_crimson_theme(fig_emp, source=source_g3, height=440)
             st.plotly_chart(fig_emp, use_container_width=True)
             render_source_caption(source_g3)
         else:
@@ -179,14 +188,14 @@ def render_tab_academic(selected_curricula: list = None):
                 title="Graph 1.4: Program Tuition Fee Comparison (THB)",
                 labels={"tuition_fee_total_thb": "Total Degree Cost (THB)", "curriculum_name": "Program"},
                 color="degree_level",
-                color_discrete_map={"Bachelor's": COLOR_PRIMARY, "Master's": COLOR_ACCENT}
+                color_discrete_map={"Bachelor's": COLOR_PRIMARY_CRIMSON, "Master's": COLOR_ACCENT_ROSE}
             )
             fig_tuition.update_traces(
                 hovertemplate="<b>%{y}</b><br>Total Cost: ฿%{x:,.0f}<br>Institution: %{customdata[0]}<extra></extra>",
                 customdata=curricula_df.sort_values(by="tuition_fee_total_thb", ascending=True)[["institution"]]
             )
             fig_tuition.update_layout(legend=dict(orientation="h", yanchor="bottom", y=-0.3, xanchor="center", x=0.5))
-            apply_dark_theme(fig_tuition, source=source_g4, height=440)
+            apply_crimson_theme(fig_tuition, source=source_g4, height=440)
             st.plotly_chart(fig_tuition, use_container_width=True)
             render_source_caption(source_g4)
         else:

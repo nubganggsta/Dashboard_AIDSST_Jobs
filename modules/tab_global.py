@@ -1,7 +1,7 @@
 """
 Global & Regional Market Ecosystem & Open Data References
 Implements macro labor metrics, multi-region salary comparisons,
-degree requirement distributions, categorized skill taxonomy, and open data citations.
+degree requirement distributions, and open data citations in Crimson Soft Light.
 """
 
 import streamlit as st
@@ -10,13 +10,9 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 from utils.theme import (
-    apply_dark_theme,
-    COLOR_PRIMARY,
-    COLOR_SECONDARY,
-    COLOR_ACCENT,
-    COLOR_WARNING,
-    COLOR_INFO,
-    PLOTLY_CHART_COLORS
+    apply_crimson_theme,
+    COLOR_PRIMARY_CRIMSON,
+    COLOR_ACCENT_ROSE
 )
 from modules.components import render_kpi_card, render_section_header, render_source_caption
 from data.market_overview import (
@@ -45,7 +41,8 @@ def render_tab_global():
             subtext="BLS 10-Yr Outlook",
             icon="🇺🇸",
             delta=f"+{MARKET_OVERVIEW_STATS['us_projected_growth_10yr']} 10-Yr",
-            delta_type="positive"
+            delta_type="positive",
+            accent_color="crimson"
         )
     with col2:
         render_kpi_card(
@@ -54,7 +51,8 @@ def render_tab_global():
             subtext="Data Sci, Stats & ML",
             icon="🌐",
             delta="Worldwide",
-            delta_type="neutral"
+            delta_type="neutral",
+            accent_color="blue"
         )
     with col3:
         render_kpi_card(
@@ -63,16 +61,18 @@ def render_tab_global():
             subtext=f"Out of {MARKET_OVERVIEW_STATS['thailand_annual_graduates_stem']:,} STEM",
             icon="🇹🇭",
             delta="MHESI Portal",
-            delta_type="positive"
+            delta_type="positive",
+            accent_color="yellow"
         )
     with col4:
         render_kpi_card(
             title="Primary Qualification",
             value="Bachelor's",
-            subtext="58% of global job postings",
+            subtext="58% of global postings",
             icon="📜",
             delta="Entry Baseline",
-            delta_type="neutral"
+            delta_type="neutral",
+            accent_color="pink"
         )
 
     st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
@@ -106,15 +106,15 @@ def render_tab_global():
             title="International Salary Comparison (Normalized to USD / Year)",
             labels={"usd_per_year": "Annual Compensation (USD Equiv.)", "region": "Region"},
             color_discrete_map={
-                "Entry-Level (0-2 Yrs)": COLOR_PRIMARY,
-                "Senior / Lead (5+ Yrs)": COLOR_ACCENT
+                "Entry-Level (0-2 Yrs)": COLOR_PRIMARY_CRIMSON,
+                "Senior / Lead (5+ Yrs)": "#1D3557"
             }
         )
         fig_reg_sal.update_traces(
             hovertemplate="<b>%{x}</b> (%{data.name})<br>Normalized: $%{y:,.0f} USD/yr<extra></extra>"
         )
         fig_reg_sal.update_layout(legend=dict(orientation="h", yanchor="bottom", y=-0.3, xanchor="center", x=0.5))
-        apply_dark_theme(fig_reg_sal, source=source_sal, height=430)
+        apply_crimson_theme(fig_reg_sal, source=source_sal, height=430)
         st.plotly_chart(fig_reg_sal, use_container_width=True)
         render_source_caption(source_sal)
 
@@ -129,9 +129,9 @@ def render_tab_global():
             title="Minimum Degree Requirements in Postings (%)",
             color="degree",
             color_discrete_map={
-                "Bachelor's Degree": COLOR_PRIMARY,
-                "Master's Degree": "#818cf8",
-                "PhD / Doctorate": "#c084fc"
+                "Bachelor's Degree": COLOR_PRIMARY_CRIMSON,
+                "Master's Degree": "#B23A48",
+                "PhD / Doctorate": "#1D3557"
             }
         )
         fig_donut.update_traces(
@@ -139,7 +139,7 @@ def render_tab_global():
             hovertemplate="<b>%{label}</b><br>Share: %{percent}<extra></extra>"
         )
         fig_donut.update_layout(legend=dict(orientation="h", yanchor="bottom", y=-0.3, xanchor="center", x=0.5))
-        apply_dark_theme(fig_donut, source=source_deg, height=430)
+        apply_crimson_theme(fig_donut, source=source_deg, height=430)
         st.plotly_chart(fig_donut, use_container_width=True)
         render_source_caption(source_deg)
 
@@ -157,11 +157,11 @@ def render_tab_global():
     with tax_col:
         st.markdown("#### 🛠️ In-Demand Skill Taxonomy")
         for cat in SKILL_DEMAND_TAXONOMY:
-            skill_badges = " ".join([f"<span style='background-color:#1e293b; border:1px solid #334155; border-radius:6px; padding:3px 8px; margin-right:4px; font-size:0.8rem; color:#38bdf8;'>{s}</span>" for s in cat["skills"]])
+            skill_badges = " ".join([f"<span style='background-color:#FFFFFF; border:1px solid #E9ECEF; border-radius:6px; padding:3px 8px; margin-right:4px; font-size:0.8rem; color:#801235; font-weight:500;'>{s}</span>" for s in cat["skills"]])
             st.markdown(
                 f"""
-                <div style="background-color: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 12px 16px; margin-bottom: 10px;">
-                    <div style="font-weight: 600; color: #f8fafc; font-size: 0.95rem; margin-bottom: 6px;">
+                <div style="background-color: #FFFFFF; border: 1px solid #E9ECEF; border-radius: 8px; padding: 12px 16px; margin-bottom: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+                    <div style="font-weight: 600; color: #2B2B2B; font-size: 0.95rem; margin-bottom: 6px;">
                         {cat['icon']} {cat['category']}
                     </div>
                     <div>{skill_badges}</div>
@@ -173,11 +173,11 @@ def render_tab_global():
     with comp_col:
         st.markdown("#### 🏢 Hiring Ecosystem by Sector")
         for sector, companies in HIRING_COMPANIES_BY_SECTOR.items():
-            comp_badges = " ".join([f"<span style='background-color:#1e293b; border:1px solid #334155; border-radius:6px; padding:3px 8px; margin-right:4px; font-size:0.8rem; color:#34d399;'>{c}</span>" for c in companies])
+            comp_badges = " ".join([f"<span style='background-color:#FFFFFF; border:1px solid #E9ECEF; border-radius:6px; padding:3px 8px; margin-right:4px; font-size:0.8rem; color:#1D3557; font-weight:500;'>{c}</span>" for c in companies])
             st.markdown(
                 f"""
-                <div style="background-color: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 12px 16px; margin-bottom: 10px;">
-                    <div style="font-weight: 600; color: #f8fafc; font-size: 0.95rem; margin-bottom: 6px;">
+                <div style="background-color: #FFFFFF; border: 1px solid #E9ECEF; border-radius: 8px; padding: 12px 16px; margin-bottom: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+                    <div style="font-weight: 600; color: #2B2B2B; font-size: 0.95rem; margin-bottom: 6px;">
                         {sector}
                     </div>
                     <div>{comp_badges}</div>
@@ -189,6 +189,10 @@ def render_tab_global():
     st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
 
     # --- Section: Open Data Repositories & References ---
+    render_open_data_footer()
+
+def render_open_data_footer():
+    """Renders official Open Data citations and methodology panel."""
     render_section_header(
         title="Open Data Repositories & Citation Index",
         subtitle="Direct links and methodology descriptions for authoritative labor statistics and survey benchmarks.",
@@ -201,10 +205,10 @@ def render_tab_global():
         with col:
             st.markdown(
                 f"""
-                <div style="background-color: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; margin-bottom: 14px;">
-                    <h5 style="color: #38bdf8; margin: 0 0 4px 0;"><a href="{repo['url']}" target="_blank" style="color: #38bdf8; text-decoration: none;">{repo['name']} ↗</a></h5>
-                    <div style="color: #94a3b8; font-size: 0.8rem; margin-bottom: 8px;"><strong>Source:</strong> {repo['source']}</div>
-                    <div style="color: #cbd5e1; font-size: 0.85rem; line-height: 1.4;">{repo['description']}</div>
+                <div style="background-color: #FFFFFF; border: 1px solid #E9ECEF; border-radius: 10px; padding: 16px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                    <h5 style="color: #801235; margin: 0 0 4px 0;"><a href="{repo['url']}" target="_blank" style="color: #801235; text-decoration: underline;">{repo['name']} ↗</a></h5>
+                    <div style="color: #6C757D; font-size: 0.8rem; margin-bottom: 8px;"><strong>Source:</strong> {repo['source']}</div>
+                    <div style="color: #2B2B2B; font-size: 0.85rem; line-height: 1.4;">{repo['description']}</div>
                 </div>
                 """,
                 unsafe_allow_html=True

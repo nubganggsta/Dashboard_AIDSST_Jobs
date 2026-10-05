@@ -42,6 +42,14 @@
 | 5.4 | Add data source captions to Tab 3 charts & action table | ✅ Done | 2026-10-05 | Cross-analysis synthesis model sources |
 | 5.5 | Add data source captions to Tab 4 international charts | ✅ Done | 2026-10-05 | BLS, Stack Overflow, and Kaggle open data |
 | 5.6 | Commit and push all updates to GitHub remote | ✅ Done | 2026-10-05 | Synchronized with origin/main |
+| **Phase 6** | **Crimson Soft Light (Burgundy) Redesign** | | | |
+| 6.1 | Save `dashboard_specification.md` in workspace | ✅ Done | 2026-10-05 | Specification Version 2.0.0 |
+| 6.2 | Refactor Streamlit theme to light (`.streamlit/config.toml`) | ✅ Done | 2026-10-05 | Primary `#801235`, Canvas `#F8F9FA` |
+| 6.3 | Implement Crimson Soft Light color palette (`utils/theme.py`) | ✅ Done | 2026-10-05 | Transparent plot background, `#E9ECEF` grid |
+| 6.4 | Restyle CSS, white cards, and pastel KPI tokens (`modules/components.py`) | ✅ Done | 2026-10-05 | Solid `#800020` Burgundy sidebar & white cards |
+| 6.5 | Restyle Tab 1, Tab 2, and Tab 3 to Crimson Soft Light | ✅ Done | 2026-10-05 | Visual consistency with preserved data sources |
+| 6.6 | Refactor `app.py` to interactive 3-tab layout + open data expander | ✅ Done | 2026-10-05 | Clean enterprise layout |
+| 6.7 | Commit and push updates to GitHub | 🔄 In Progress | 2026-10-05 | Push to origin/main |
 
 ---
 
@@ -128,3 +136,10 @@ Dashboard_AIDSST_Jobs/
   - Added dedicated data source annotations to every graph across the entire dashboard (both within the Plotly chart subtitle and as styled captions below each chart).
   - Added data source labels to expandable data drilldown tables.
   - Committed and pushed all updates to GitHub (`origin/main`).
+- **2026-10-05 (Phase 6):**
+  - Refactored entire application aesthetic to **Crimson Soft Light (Burgundy)** based on `dashboard_specification.md` (Version 2.0.0).
+  - Styled left sidebar with solid Burgundy `#800020` and white typography.
+  - Styled main canvas with `#F8F9FA` off-white background and `#FFFFFF` rounded card containers (`border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05)`).
+  - Implemented pastel accent tokens (`pastel_yellow`, `pastel_blue`, `pastel_pink`, `primary_crimson`) for KPI cards.
+  - Set Plotly chart backgrounds to transparent (`rgba(0,0,0,0)`) with `#E9ECEF` gridlines and Crimson palette.
+  - Configured 3-tab layout (`Academic Supply`, `Job Demand`, `Skill Mismatch`) with collapsible Open Data & Global Benchmark repository.

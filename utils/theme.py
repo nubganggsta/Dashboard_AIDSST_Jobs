@@ -1,95 +1,98 @@
 """
-Dark Mode Theme Utilities & Plotly Styling Configuration
-Ensures cohesive modern tech aesthetics across all charts and UI components.
+Crimson Soft Light Theme Utilities & Plotly Styling Configuration
+Implements the Burgundy / Crimson Soft Light enterprise UI styling system.
 """
 
 import plotly.graph_objects as go
 import plotly.express as px
 
-# Color Palette Constants
-COLOR_BG_DARK = "#0f172a"        # Slate 900
-COLOR_SURFACE_DARK = "#1e293b"   # Slate 800
-COLOR_SURFACE_HOVER = "#334155"  # Slate 700
-COLOR_TEXT_LIGHT = "#f8fafc"     # Slate 50
-COLOR_TEXT_MUTED = "#94a3b8"     # Slate 400
-COLOR_BORDER = "#334155"         # Slate 700
+# Specification Color Palette
+COLOR_SIDEBAR_BG = "#800020"       # Deep Crimson / Burgundy
+COLOR_CANVAS_BG = "#F8F9FA"        # Soft Cream / Light Off-White
+COLOR_CARD_BG = "#FFFFFF"          # Pure White
+COLOR_TEXT_PRIMARY = "#2B2B2B"     # Dark Charcoal
+COLOR_TEXT_SECONDARY = "#6C757D"   # Soft Muted Gray
+COLOR_SIDEBAR_TEXT = "#FFFFFF"     # Pure White
 
-COLOR_PRIMARY = "#38bdf8"        # Sky 400
-COLOR_SECONDARY = "#34d399"      # Emerald 400
-COLOR_ACCENT = "#a855f7"         # Purple 500
-COLOR_WARNING = "#fbbf24"        # Amber 400
-COLOR_DANGER = "#f87171"         # Rose 400
-COLOR_INFO = "#60a5fa"           # Blue 400
+# Accent & Data Viz Tokens
+COLOR_PRIMARY_CRIMSON = "#801235"  # Main Chart Color / Active Controls
+COLOR_ACCENT_ROSE = "#E63946"      # Highlighting / Alert Elements
+COLOR_PASTEL_YELLOW = "#FFF3BF"    # KPI Accent 1
+COLOR_PASTEL_BLUE = "#D0EBFF"      # KPI Accent 2
+COLOR_PASTEL_PINK = "#FFDEEB"      # KPI Accent 3
+COLOR_NEUTRAL_GRID = "#E9ECEF"     # Plotly Chart Gridlines
+COLOR_BORDER = "#E9ECEF"
 
+# Rich Crimson / Burgundy Palette for charts
 PLOTLY_CHART_COLORS = [
-    COLOR_PRIMARY,
-    COLOR_SECONDARY,
-    COLOR_ACCENT,
-    COLOR_WARNING,
-    COLOR_INFO,
-    "#ec4899", # Pink
-    "#f97316", # Orange
-    "#14b8a6", # Teal
+    "#801235",  # Primary Crimson
+    "#E63946",  # Rose Accent
+    "#1D3557",  # Deep Navy Contrast
+    "#2A9D8F",  # Sage Teal
+    "#D4A373",  # Warm Sand Gold
+    "#B23A48",  # Medium Crimson
+    "#C9184A",  # Berry Pink
+    "#4A1525",  # Deep Burgundy
 ]
 
-def apply_dark_theme(fig: go.Figure, title: str = "", source: str = "", height: int = 420) -> go.Figure:
-    """Applies modern tech dark styling to a Plotly figure with optional title and data source subtitle."""
+def apply_crimson_theme(fig: go.Figure, title: str = "", source: str = "", height: int = 420) -> go.Figure:
+    """Applies modern Crimson Soft Light styling to a Plotly figure."""
     current_title = title or (fig.layout.title.text if fig.layout.title and fig.layout.title.text else "")
     
     title_dict = {}
     if current_title:
         clean_title = current_title if current_title.startswith("<b>") else f"<b>{current_title}</b>"
         title_dict["text"] = clean_title
-        title_dict["font"] = {"size": 15, "color": COLOR_TEXT_LIGHT, "family": "Inter, sans-serif"}
+        title_dict["font"] = {"size": 15, "color": COLOR_TEXT_PRIMARY, "family": "Inter, Prompt, sans-serif"}
         title_dict["x"] = 0.02
         title_dict["xanchor"] = "left"
         if source:
             title_dict["subtitle"] = {
                 "text": f"📌 Data Source: {source}",
-                "font": {"size": 11, "color": COLOR_TEXT_MUTED, "family": "Inter, sans-serif"}
+                "font": {"size": 11, "color": COLOR_TEXT_SECONDARY, "family": "Inter, Prompt, sans-serif"}
             }
     elif source:
         title_dict = {
             "subtitle": {
                 "text": f"📌 Data Source: {source}",
-                "font": {"size": 11, "color": COLOR_TEXT_MUTED, "family": "Inter, sans-serif"}
+                "font": {"size": 11, "color": COLOR_TEXT_SECONDARY, "family": "Inter, Prompt, sans-serif"}
             },
             "x": 0.02,
             "xanchor": "left"
         }
 
-    top_margin = 75 if (current_title and source) else (55 if current_title else (40 if source else 30))
+    top_margin = 72 if (current_title and source) else (50 if current_title else (35 if source else 25))
 
     layout_kwargs = {
-        "paper_bgcolor": COLOR_SURFACE_DARK,
-        "plot_bgcolor": COLOR_SURFACE_DARK,
-        "font": {"color": COLOR_TEXT_LIGHT, "family": "Inter, system-ui, sans-serif", "size": 12},
+        "paper_bgcolor": "rgba(0,0,0,0)",
+        "plot_bgcolor": "rgba(0,0,0,0)",
+        "font": {"color": COLOR_TEXT_PRIMARY, "family": "Inter, Prompt, sans-serif", "size": 12},
         "height": height,
-        "margin": {"l": 40, "r": 30, "t": top_margin, "b": 40},
+        "margin": {"l": 40, "r": 25, "t": top_margin, "b": 35},
         "legend": {
-            "font": {"color": COLOR_TEXT_MUTED, "size": 11},
-            "bgcolor": "rgba(15, 23, 42, 0.6)",
-            "bordercolor": COLOR_BORDER,
+            "font": {"color": COLOR_TEXT_SECONDARY, "size": 11},
+            "bgcolor": "rgba(255, 255, 255, 0.85)",
+            "bordercolor": COLOR_NEUTRAL_GRID,
             "borderwidth": 1
         },
         "hoverlabel": {
-            "bgcolor": COLOR_BG_DARK,
-            "bordercolor": COLOR_PRIMARY,
-            "font": {"color": COLOR_TEXT_LIGHT, "size": 12, "family": "Inter, sans-serif"}
+            "bgcolor": COLOR_CARD_BG,
+            "bordercolor": COLOR_PRIMARY_CRIMSON,
+            "font": {"color": COLOR_TEXT_PRIMARY, "size": 12, "family": "Inter, sans-serif"}
         },
         "xaxis": {
-            "gridcolor": "#26354a",
-            "zerolinecolor": "#26354a",
-            "linecolor": COLOR_BORDER,
-            "tickfont": {"color": COLOR_TEXT_MUTED},
-            "title_font": {"color": COLOR_TEXT_LIGHT, "size": 13}
+            "gridcolor": COLOR_NEUTRAL_GRID,
+            "zerolinecolor": COLOR_NEUTRAL_GRID,
+            "linecolor": COLOR_NEUTRAL_GRID,
+            "tickfont": {"color": COLOR_TEXT_SECONDARY},
+            "title_font": {"color": COLOR_TEXT_PRIMARY, "size": 12}
         },
         "yaxis": {
-            "gridcolor": "#26354a",
-            "zerolinecolor": "#26354a",
-            "linecolor": COLOR_BORDER,
-            "tickfont": {"color": COLOR_TEXT_MUTED},
-            "title_font": {"color": COLOR_TEXT_LIGHT, "size": 13}
+            "gridcolor": COLOR_NEUTRAL_GRID,
+            "zerolinecolor": COLOR_NEUTRAL_GRID,
+            "linecolor": COLOR_NEUTRAL_GRID,
+            "tickfont": {"color": COLOR_TEXT_SECONDARY},
+            "title_font": {"color": COLOR_TEXT_PRIMARY, "size": 12}
         }
     }
     
@@ -98,3 +101,6 @@ def apply_dark_theme(fig: go.Figure, title: str = "", source: str = "", height: 
 
     fig.update_layout(**layout_kwargs)
     return fig
+
+# Alias for backwards compatibility
+apply_dark_theme = apply_crimson_theme

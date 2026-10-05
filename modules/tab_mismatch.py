@@ -2,7 +2,7 @@
 Tab 3: Skill Mismatch Analysis (Supply vs. Demand Gap)
 Synthesizes academic curriculum outputs with commercial job market requirements.
 Features the Skill Alignment Index, Diverging Supply-Demand Bar,
-2x2 Mismatch Matrix, and Automated Curriculum Recommendations.
+2x2 Mismatch Matrix, and Automated Curriculum Recommendations with Crimson Soft Light aesthetics.
 """
 
 import streamlit as st
@@ -12,14 +12,12 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 from utils.theme import (
-    apply_dark_theme,
-    COLOR_PRIMARY,
-    COLOR_SECONDARY,
-    COLOR_ACCENT,
-    COLOR_WARNING,
-    COLOR_DANGER,
-    COLOR_TEXT_MUTED,
-    COLOR_BORDER
+    apply_crimson_theme,
+    COLOR_PRIMARY_CRIMSON,
+    COLOR_ACCENT_ROSE,
+    COLOR_TEXT_PRIMARY,
+    COLOR_TEXT_SECONDARY,
+    COLOR_NEUTRAL_GRID
 )
 from modules.components import render_kpi_card, render_section_header, render_source_caption
 from data.academic_supply import get_academic_curricula_df, get_academic_skills_coverage
@@ -59,7 +57,7 @@ def render_tab_mismatch(
         badge="Supply vs Demand Gap Analytics"
     )
 
-    # --- Top Metric Scorecards ---
+    # --- Top Metric Scorecards (Crimson Soft Light Accents) ---
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
     with kpi1:
         render_kpi_card(
@@ -67,8 +65,9 @@ def render_tab_mismatch(
             value=f"{scorecard['alignment_index_pct']}%",
             subtext="Curriculum-to-Market match",
             icon="🎯",
-            delta="Benchmark: 70%",
-            delta_type="positive" if scorecard['alignment_index_pct'] >= 70 else "negative"
+            delta="Target: 70%",
+            delta_type="positive" if scorecard['alignment_index_pct'] >= 70 else "negative",
+            accent_color="crimson"
         )
     with kpi2:
         render_kpi_card(
@@ -77,16 +76,18 @@ def render_tab_mismatch(
             subtext="High market demand, low supply",
             icon="🚨",
             delta="Urgent Action Required",
-            delta_type="negative" if scorecard['critical_deficit_count'] > 0 else "positive"
+            delta_type="negative" if scorecard['critical_deficit_count'] > 0 else "positive",
+            accent_color="pink"
         )
     with kpi3:
         render_kpi_card(
-            title="Over-Supplied / Niche",
+            title="Oversupplied / Niche",
             value=f"{scorecard['oversupplied_count']}",
             subtext="Taught > commercial demand",
             icon="⚠️",
             delta="Rebalance to Electives",
-            delta_type="neutral"
+            delta_type="neutral",
+            accent_color="yellow"
         )
     with kpi4:
         render_kpi_card(
@@ -95,7 +96,8 @@ def render_tab_mismatch(
             subtext="Largest unmet talent demand",
             icon="🔥",
             delta="Largest Gap",
-            delta_type="negative"
+            delta_type="negative",
+            accent_color="blue"
         )
 
     st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
@@ -110,34 +112,34 @@ def render_tab_mismatch(
         
         fig_comp = go.Figure()
         
-        # Academic Supply Bars
+        # Academic Supply Bars (Deep Navy)
         fig_comp.add_trace(go.Bar(
             y=sorted_mismatch["skill"],
             x=sorted_mismatch["academic_supply_pct"],
             name="Academic Supply (% Curricula)",
             orientation="h",
-            marker=dict(color="#38bdf8", opacity=0.85),
+            marker=dict(color="#1D3557", opacity=0.90),
             hovertemplate="<b>%{y}</b><br>Academic Coverage: %{x:.1f}%<extra></extra>"
         ))
         
-        # Job Market Demand Bars
+        # Job Market Demand Bars (Primary Crimson)
         fig_comp.add_trace(go.Bar(
             y=sorted_mismatch["skill"],
             x=sorted_mismatch["demand_percentage"],
             name="Job Market Demand (% Postings)",
             orientation="h",
-            marker=dict(color="#f87171", opacity=0.85),
+            marker=dict(color="#801235", opacity=0.90),
             hovertemplate="<b>%{y}</b><br>Market Demand: %{x:.1f}%<extra></extra>"
         ))
 
         fig_comp.update_layout(
-            title="Graph 3.1: Academic Supply vs. Market Demand (% Comparison)",
+            title="Graph 3.1: Supply vs. Demand Skill Overlay (% Comparison)",
             barmode="group",
             xaxis_title="Coverage / Demand Percentage (%)",
             yaxis_title="Technical Skill",
             legend=dict(orientation="h", yanchor="bottom", y=-0.3, xanchor="center", x=0.5)
         )
-        apply_dark_theme(fig_comp, source=source_g31, height=480)
+        apply_crimson_theme(fig_comp, source=source_g31, height=480)
         st.plotly_chart(fig_comp, use_container_width=True)
         render_source_caption(source_g31)
 
@@ -155,29 +157,29 @@ def render_tab_mismatch(
             labels={
                 "academic_supply_pct": "Academic Coverage Supply (%)",
                 "demand_percentage": "Job Market Demand (%)",
-                "quadrant": "Strategic Classification"
+                "quadrant": "Classification"
             },
             color_discrete_map={
-                "Core Essentials (High Supply / High Demand)": COLOR_SECONDARY,
-                "Urgent Curriculum Gap (Low Supply / High Demand)": COLOR_DANGER,
-                "Niche / Academic Focus (High Supply / Low Demand)": COLOR_WARNING,
-                "Specialized / Low Volume (Low Supply / Low Demand)": "#94a3b8"
+                "Core Essentials (High Supply / High Demand)": "#2A9D8F",
+                "Urgent Curriculum Gap (Low Supply / High Demand)": "#801235",
+                "Niche / Academic Focus (High Supply / Low Demand)": "#D4A373",
+                "Specialized / Low Volume (Low Supply / Low Demand)": "#6C757D"
             }
         )
 
         # Add quadrant threshold reference lines (at 30%)
-        fig_scatter.add_vline(x=30, line_dash="dash", line_color="rgba(148, 163, 184, 0.4)", line_width=1.5)
-        fig_scatter.add_hline(y=30, line_dash="dash", line_color="rgba(148, 163, 184, 0.4)", line_width=1.5)
+        fig_scatter.add_vline(x=30, line_dash="dash", line_color="#CED4DA", line_width=1.5)
+        fig_scatter.add_hline(y=30, line_dash="dash", line_color="#CED4DA", line_width=1.5)
 
-        # Quadrant background annotation labels
-        fig_scatter.add_annotation(x=15, y=75, text="🚨 <b>URGENT CURRICULUM GAPS</b><br>(High Demand / Low Supply)", showarrow=False, font=dict(color="rgba(248, 113, 113, 0.6)", size=10), bgcolor="rgba(15, 23, 42, 0.5)")
-        fig_scatter.add_annotation(x=75, y=75, text="✅ <b>CORE ESSENTIALS</b><br>(High Demand / High Supply)", showarrow=False, font=dict(color="rgba(52, 211, 153, 0.6)", size=10), bgcolor="rgba(15, 23, 42, 0.5)")
-        fig_scatter.add_annotation(x=75, y=12, text="⚠️ <b>NICHE / ACADEMIC FOCUS</b><br>(Low Demand / High Supply)", showarrow=False, font=dict(color="rgba(251, 191, 36, 0.6)", size=10), bgcolor="rgba(15, 23, 42, 0.5)")
-        fig_scatter.add_annotation(x=15, y=12, text="ℹ️ <b>SPECIALIZED / EMERGING</b><br>(Low Demand / Low Supply)", showarrow=False, font=dict(color="rgba(148, 163, 184, 0.6)", size=10), bgcolor="rgba(15, 23, 42, 0.5)")
+        # Quadrant background annotation labels with soft badges
+        fig_scatter.add_annotation(x=15, y=75, text="🚨 <b>URGENT GAPS</b><br>(High Demand / Low Supply)", showarrow=False, font=dict(color="#801235", size=10), bgcolor="rgba(255, 222, 235, 0.75)", bordercolor="#E63946", borderwidth=1, borderpad=4)
+        fig_scatter.add_annotation(x=75, y=75, text="✅ <b>CORE ESSENTIALS</b><br>(High Demand / High Supply)", showarrow=False, font=dict(color="#2A9D8F", size=10), bgcolor="rgba(208, 235, 255, 0.75)", bordercolor="#2A9D8F", borderwidth=1, borderpad=4)
+        fig_scatter.add_annotation(x=75, y=12, text="⚠️ <b>NICHE / ACADEMIC</b><br>(Low Demand / High Supply)", showarrow=False, font=dict(color="#B45309", size=10), bgcolor="rgba(254, 243, 199, 0.75)", bordercolor="#F59E0B", borderwidth=1, borderpad=4)
+        fig_scatter.add_annotation(x=15, y=12, text="ℹ️ <b>SPECIALIZED</b><br>(Low Demand / Low Supply)", showarrow=False, font=dict(color="#6C757D", size=10), bgcolor="rgba(233, 236, 239, 0.75)", bordercolor="#CED4DA", borderwidth=1, borderpad=4)
 
         fig_scatter.update_traces(
             textposition="top center",
-            textfont=dict(size=10, color="#f8fafc"),
+            textfont=dict(size=10, color="#2B2B2B"),
             hovertemplate="<b>%{text}</b><br>Academic Supply: %{x:.1f}%<br>Market Demand: %{y:.1f}%<br>Quadrant: %{customdata[0]}<extra></extra>",
             customdata=mismatch_df[["quadrant"]]
         )
@@ -186,7 +188,7 @@ def render_tab_mismatch(
             yaxis=dict(range=[-5, 105]),
             legend=dict(orientation="h", yanchor="bottom", y=-0.35, xanchor="center", x=0.5)
         )
-        apply_dark_theme(fig_scatter, source=source_g32, height=480)
+        apply_crimson_theme(fig_scatter, source=source_g32, height=480)
         st.plotly_chart(fig_scatter, use_container_width=True)
         render_source_caption(source_g32)
 
@@ -194,8 +196,8 @@ def render_tab_mismatch(
 
     # --- Section: Actionable Recommendations Table ---
     render_section_header(
-        title="Automated Actionable Recommendations for Curriculum Planners",
-        subtitle="Data-driven suggestions for university curriculum revision, faculty training, and student upskilling programs.",
+        title="Actionable Curriculum Recommendations for Universities",
+        subtitle="Data-driven suggestions for curriculum revision, faculty training, and student upskilling programs.",
         badge="Strategic Curriculum Guidance"
     )
 
@@ -243,7 +245,5 @@ def render_tab_mismatch(
         }
     )
     render_source_caption("Automated Skill Gap Algorithmic Model & Curriculum Optimization Framework")
-    
-    return mismatch_df
     
     return mismatch_df

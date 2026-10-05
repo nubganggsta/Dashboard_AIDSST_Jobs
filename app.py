@@ -1,32 +1,31 @@
 """
 Main Streamlit Application:
-AI, Data Science & Statistics Supply-Demand & Skill Mismatch Dashboard
+AI & Data Science Market Dashboard — Crimson Soft Light System
 """
 
 import streamlit as st
 import pandas as pd
-import io
 
 # Page configuration
 st.set_page_config(
-    page_title="AI & Data Science Supply-Demand Dashboard",
-    page_icon="📊",
+    page_title="AI & Data Science Market Dashboard",
+    page_icon="🍷",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Import custom styling and modules
+# Import styling and visual modules
 from modules.components import inject_custom_css
 from modules.tab_academic import render_tab_academic
 from modules.tab_demand import render_tab_demand
 from modules.tab_mismatch import render_tab_mismatch
-from modules.tab_global import render_tab_global
+from modules.tab_global import render_tab_global, render_open_data_footer
 
 from data.academic_supply import get_academic_curricula_df, get_academic_skills_coverage
 from data.job_demand import generate_job_demand_df, get_skill_demand_counts
 from utils.calculations import compute_skill_mismatch_metrics
 
-# Inject high-end dark styling
+# Inject Crimson Soft Light styling
 inject_custom_css()
 
 # --- Initialize Base Reference Data ---
@@ -38,12 +37,16 @@ def load_base_data():
 
 base_acad_df, base_job_df = load_base_data()
 
-# --- Sidebar Controls & Cross-Filtering ---
+# --- Left Sidebar Navigation & Filters (Solid Burgundy #800020) ---
 st.sidebar.markdown(
     """
-    <div style="padding: 10px 0 15px 0;">
-        <h2 style="color: #38bdf8; margin: 0; font-size: 1.35rem; font-weight: 700;">📊 AIDSST Analytics</h2>
-        <p style="color: #94a3b8; font-size: 0.8rem; margin: 2px 0 0 0;">Interactive Cross-Filtering Engine</p>
+    <div style="padding: 10px 0 18px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.2); margin-bottom: 15px;">
+        <h2 style="color: #FFFFFF !important; margin: 0; font-size: 1.35rem; font-weight: 800; letter-spacing: -0.01em;">
+            🍷 AI & DATA SCIENCE
+        </h2>
+        <p style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.82rem; margin: 3px 0 0 0;">
+            Supply-Demand & Skill Mismatch
+        </p>
     </div>
     """,
     unsafe_allow_html=True
@@ -52,10 +55,10 @@ st.sidebar.markdown(
 st.sidebar.markdown("### 🎓 Academic Supply Filters")
 all_curricula = sorted(base_acad_df["curriculum_name"].unique().tolist())
 selected_curricula = st.sidebar.multiselect(
-    "Select Academic Programs:",
+    "Select Degree Programs:",
     options=all_curricula,
     default=all_curricula,
-    help="Filters academic output trends and curriculum course matrices across all tabs."
+    help="Filters academic output trends and curriculum course matrices across tabs."
 )
 
 st.sidebar.markdown("---")
@@ -85,9 +88,9 @@ selected_sectors = st.sidebar.multiselect(
 )
 
 skill_query = st.sidebar.text_input(
-    "🔍 Filter Postings by Skill Keyword:",
+    "🔍 Search Required Skill:",
     placeholder="e.g. PyTorch, SQL, RAG",
-    help="Filter postings containing specific keywords."
+    help="Filter job postings by specific technical skill keyword."
 )
 
 # Export Data Section in Sidebar
@@ -134,26 +137,28 @@ st.sidebar.download_button(
 
 st.sidebar.markdown(
     """
-    <div style="font-size: 0.75rem; color: #64748b; margin-top: 20px; line-height: 1.4;">
-        Data Sources: MHESI Open Data Portal, US BLS, Kaggle Global Salaries, Stack Overflow Survey.<br>
-        Version: 1.0.0 • Tech Dark Theme
+    <div style="font-size: 0.75rem; color: rgba(255, 255, 255, 0.7) !important; margin-top: 25px; line-height: 1.4;">
+        Design System: Crimson Soft Light<br>
+        Version: 2.0.0 Enterprise UI
     </div>
     """,
     unsafe_allow_html=True
 )
 
-# --- Main Application Header ---
+# --- Main Content Canvas Header ---
 st.markdown(
     """
-    <div style="margin-bottom: 25px;">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 2.2rem;">📊</span>
+    <div style="margin-bottom: 22px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="background-color: #801235; color: #FFFFFF; border-radius: 10px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold;">
+                🍷
+            </div>
             <div>
-                <h1 style="color: #f8fafc; margin: 0; font-size: 2.0rem; font-weight: 800; letter-spacing: -0.02em;">
-                    AI, Data Science & Statistics Supply-Demand & Skill Mismatch Dashboard
+                <h1 style="color: #2B2B2B; margin: 0; font-size: 1.95rem; font-weight: 800; letter-spacing: -0.02em;">
+                    AI & Data Science Market Dashboard
                 </h1>
-                <p style="color: #94a3b8; margin: 4px 0 0 0; font-size: 1.0rem;">
-                    Empowering higher education curriculum modernization, industrial recruitment strategy, and workforce upskilling.
+                <p style="color: #6C757D; margin: 3px 0 0 0; font-size: 0.95rem;">
+                    Measuring academic supply, labor market demand, and skill mismatch with Crimson Soft Light analytics.
                 </p>
             </div>
         </div>
@@ -162,12 +167,11 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# --- 4 Interactive Tabs ---
-tab1, tab2, tab3, tab4 = st.tabs([
+# --- Interactive 3-Tab System ---
+tab1, tab2, tab3 = st.tabs([
     "🎓 Tab 1: Academic Supply & Skills",
     "💼 Tab 2: Job Demand & Salary",
-    "⚖️ Tab 3: Skill Mismatch Analysis",
-    "🌐 Tab 4: Global Ecosystem & References"
+    "⚖️ Tab 3: Skill Mismatch"
 ])
 
 with tab1:
@@ -189,5 +193,7 @@ with tab3:
         selected_sectors=selected_sectors
     )
 
-with tab4:
+# --- Open Data Citations & International Ecosystem Reference Expander ---
+st.markdown("<div style='height: 25px;'></div>", unsafe_allow_html=True)
+with st.expander("📚 Open Data Repositories, Citations & International Benchmarks", expanded=False):
     render_tab_global()

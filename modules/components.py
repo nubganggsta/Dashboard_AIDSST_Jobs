@@ -154,3 +154,12 @@ def render_section_header(title: str, subtitle: str = "", badge: str = ""):
         """,
         unsafe_allow_html=True
     )
+
+def render_source_caption(source: str):
+    """Renders a sleek HTML/Streamlit data source caption below charts or tables."""
+    st.markdown(
+        f"<div style='font-size: 0.78rem; color: #94a3b8; margin-top: -10px; margin-bottom: 14px;'>"
+        f"📌 <b>Data Source:</b> <i>{source}</i></div>",
+        unsafe_allow_html=True
+    )
+

@@ -21,7 +21,7 @@ from utils.theme import (
     COLOR_TEXT_MUTED,
     COLOR_BORDER
 )
-from modules.components import render_kpi_card, render_section_header
+from modules.components import render_kpi_card, render_section_header, render_source_caption
 from data.academic_supply import get_academic_curricula_df, get_academic_skills_coverage
 from data.job_demand import generate_job_demand_df, get_skill_demand_counts
 from utils.calculations import compute_skill_mismatch_metrics, calculate_scorecard_summary
@@ -105,7 +105,7 @@ def render_tab_mismatch(
 
     with col1:
         # Graph 3.1: Supply vs. Demand Skill Comparison (Grouped Bar Chart)
-        # Sort by Demand percentage descending
+        source_g31 = "Cross-Analysis: MHESI University Curricula Coverage vs. Active Tech Job Market Postings"
         sorted_mismatch = mismatch_df.sort_values(by="demand_percentage", ascending=True).tail(12)
         
         fig_comp = go.Figure()
@@ -137,11 +137,13 @@ def render_tab_mismatch(
             yaxis_title="Technical Skill",
             legend=dict(orientation="h", yanchor="bottom", y=-0.3, xanchor="center", x=0.5)
         )
-        apply_dark_theme(fig_comp, height=480)
+        apply_dark_theme(fig_comp, source=source_g31, height=480)
         st.plotly_chart(fig_comp, use_container_width=True)
+        render_source_caption(source_g31)
 
     with col2:
         # Graph 3.2: Skill Mismatch Matrix (2x2 Matrix Scatter)
+        source_g32 = "Supply-Demand Gap Synthesis Model (Academic Syllabus vs. Commercial Hiring Demand)"
         fig_scatter = px.scatter(
             mismatch_df,
             x="academic_supply_pct",
@@ -184,8 +186,9 @@ def render_tab_mismatch(
             yaxis=dict(range=[-5, 105]),
             legend=dict(orientation="h", yanchor="bottom", y=-0.35, xanchor="center", x=0.5)
         )
-        apply_dark_theme(fig_scatter, height=480)
+        apply_dark_theme(fig_scatter, source=source_g32, height=480)
         st.plotly_chart(fig_scatter, use_container_width=True)
+        render_source_caption(source_g32)
 
     st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
 
@@ -239,5 +242,8 @@ def render_tab_mismatch(
             ),
         }
     )
+    render_source_caption("Automated Skill Gap Algorithmic Model & Curriculum Optimization Framework")
+    
+    return mismatch_df
     
     return mismatch_df

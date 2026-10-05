@@ -19,7 +19,7 @@ from utils.theme import (
     COLOR_DANGER,
     PLOTLY_CHART_COLORS
 )
-from modules.components import render_kpi_card, render_section_header
+from modules.components import render_kpi_card, render_section_header, render_source_caption
 from data.job_demand import generate_job_demand_df, get_skill_demand_counts
 
 def render_tab_demand(
@@ -109,6 +109,7 @@ def render_tab_demand(
     
     with col1:
         # Graph 2.1: Job Openings Volume by Title & Industry (Treemap or Sunburst)
+        source_g21 = "Thailand & SEA Tech Job Portals & Company Career Sites (Sample n=250 active postings)"
         treemap_df = df.groupby(["industry_sector", "job_title"]).size().reset_index(name="openings")
         fig_treemap = px.treemap(
             treemap_df,
@@ -122,11 +123,13 @@ def render_tab_demand(
         fig_treemap.update_traces(
             hovertemplate="<b>%{label}</b><br>Active Openings: %{value}<br>Sector/Parent: %{parent}<extra></extra>"
         )
-        apply_dark_theme(fig_treemap, height=440)
+        apply_dark_theme(fig_treemap, source=source_g21, height=440)
         st.plotly_chart(fig_treemap, use_container_width=True)
+        render_source_caption(source_g21)
 
     with col2:
         # Graph 2.2: In-Demand Skill Breakdown (Horizontal Bar)
+        source_g22 = "Employer Job Descriptions NLP Extraction & Industry Demand Analytics (2024–2026)"
         top_skills_df = skill_demand_df.head(12).sort_values(by="demand_percentage", ascending=True)
         fig_skills = px.bar(
             top_skills_df,
@@ -142,8 +145,9 @@ def render_tab_demand(
         fig_skills.update_traces(
             hovertemplate="<b>%{y}</b><br>Demand Frequency: %{x:.1f}%<extra></extra>"
         )
-        apply_dark_theme(fig_skills, height=440)
+        apply_dark_theme(fig_skills, source=source_g22, height=440)
         st.plotly_chart(fig_skills, use_container_width=True)
+        render_source_caption(source_g22)
 
     st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
 
@@ -152,8 +156,8 @@ def render_tab_demand(
     
     with col3:
         # Graph 2.3: Hiring Companies & Volume by Seniority Level
+        source_g23 = "Corporate Recruitment Data & LinkedIn Talent Insights Thailand"
         company_counts = df.groupby(["company_name", "seniority_level"]).size().reset_index(name="openings")
-        # Order by total company openings
         top_companies = df["company_name"].value_counts().head(10).index.tolist()
         company_counts = company_counts[company_counts["company_name"].isin(top_companies)]
         
@@ -174,11 +178,13 @@ def render_tab_demand(
             category_orders={"company_name": top_companies[::-1]}
         )
         fig_companies.update_layout(legend=dict(orientation="h", yanchor="bottom", y=-0.3, xanchor="center", x=0.5))
-        apply_dark_theme(fig_companies, height=440)
+        apply_dark_theme(fig_companies, source=source_g23, height=440)
         st.plotly_chart(fig_companies, use_container_width=True)
+        render_source_caption(source_g23)
 
     with col4:
         # Graph 2.4: Salary Structure by Seniority Level (Box Plot)
+        source_g24 = "Kaggle Global Data Science Salaries Dataset & Regional Tech Salary Surveys"
         fig_salary = px.box(
             df,
             x="seniority_level",
@@ -197,8 +203,9 @@ def render_tab_demand(
         fig_salary.update_traces(
             hovertemplate="Seniority: %{x}<br>Avg Salary: ฿%{y:,.0f}<extra></extra>"
         )
-        apply_dark_theme(fig_salary, height=440)
+        apply_dark_theme(fig_salary, source=source_g24, height=440)
         st.plotly_chart(fig_salary, use_container_width=True)
+        render_source_caption(source_g24)
 
     # --- Interactive Job Postings Data Explorer ---
     with st.expander("🔎 Browse Live Job Openings Repository", expanded=False):
@@ -218,3 +225,4 @@ def render_tab_demand(
             }
         )
         st.dataframe(preview_df, use_container_width=True, hide_index=True)
+        render_source_caption("Aggregated Tech Job Board Data Feeds & Enterprise Career Listings")

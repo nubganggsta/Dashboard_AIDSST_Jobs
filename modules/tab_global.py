@@ -18,7 +18,7 @@ from utils.theme import (
     COLOR_INFO,
     PLOTLY_CHART_COLORS
 )
-from modules.components import render_kpi_card, render_section_header
+from modules.components import render_kpi_card, render_section_header, render_source_caption
 from data.market_overview import (
     MARKET_OVERVIEW_STATS,
     get_salary_by_region_df,
@@ -81,6 +81,7 @@ def render_tab_global():
     col_sal, col_deg = st.columns([3, 2])
 
     with col_sal:
+        source_sal = "U.S. BLS, Stack Overflow Developer Survey, and Regional Benchmark Reports"
         sal_df = get_salary_by_region_df()
         
         # Melt for visualization
@@ -113,10 +114,12 @@ def render_tab_global():
             hovertemplate="<b>%{x}</b> (%{data.name})<br>Normalized: $%{y:,.0f} USD/yr<extra></extra>"
         )
         fig_reg_sal.update_layout(legend=dict(orientation="h", yanchor="bottom", y=-0.3, xanchor="center", x=0.5))
-        apply_dark_theme(fig_reg_sal, height=430)
+        apply_dark_theme(fig_reg_sal, source=source_sal, height=430)
         st.plotly_chart(fig_reg_sal, use_container_width=True)
+        render_source_caption(source_sal)
 
     with col_deg:
+        source_deg = "Global Data Science & AI Job Salaries (Kaggle CC0 Open Data) & U.S. BLS Outlook"
         deg_df = get_degree_requirements_df()
         fig_donut = px.pie(
             deg_df,
@@ -136,8 +139,9 @@ def render_tab_global():
             hovertemplate="<b>%{label}</b><br>Share: %{percent}<extra></extra>"
         )
         fig_donut.update_layout(legend=dict(orientation="h", yanchor="bottom", y=-0.3, xanchor="center", x=0.5))
-        apply_dark_theme(fig_donut, height=430)
+        apply_dark_theme(fig_donut, source=source_deg, height=430)
         st.plotly_chart(fig_donut, use_container_width=True)
+        render_source_caption(source_deg)
 
     st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
 

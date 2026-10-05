@@ -10,7 +10,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 from utils.theme import apply_dark_theme, COLOR_PRIMARY, COLOR_SECONDARY, COLOR_ACCENT, COLOR_WARNING, COLOR_INFO, PLOTLY_CHART_COLORS
-from modules.components import render_kpi_card, render_section_header
+from modules.components import render_kpi_card, render_section_header, render_source_caption
 from data.academic_supply import (
     get_academic_curricula_df,
     get_curriculum_timeline_df,
@@ -89,6 +89,7 @@ def render_tab_academic(selected_curricula: list = None):
     with col1:
         # Graph 1.1: Curriculum Output
         if not timeline_df.empty:
+            source_g1 = "MHESI Higher Education Information Center & University Registrars (2021–2025)"
             fig_output = px.bar(
                 timeline_df,
                 x="year",
@@ -103,15 +104,16 @@ def render_tab_academic(selected_curricula: list = None):
                 xaxis=dict(type='category'),
                 legend=dict(orientation="h", yanchor="bottom", y=-0.35, xanchor="center", x=0.5)
             )
-            apply_dark_theme(fig_output, height=440)
+            apply_dark_theme(fig_output, source=source_g1, height=440)
             st.plotly_chart(fig_output, use_container_width=True)
+            render_source_caption(source_g1)
         else:
             st.info("No curriculum selected.")
             
     with col2:
         # Graph 1.2: Core Required Courses & Skill Matrix
         if not courses_df.empty:
-            # Aggregate skills by credits taught
+            source_g2 = "Thai University Curriculum Handbooks & TQF Course Specifications"
             skill_credits = courses_df.groupby("skill")["credits"].sum().reset_index().sort_values(by="credits", ascending=True)
             fig_skills = px.bar(
                 skill_credits,
@@ -125,8 +127,9 @@ def render_tab_academic(selected_curricula: list = None):
             )
             fig_skills.update_coloraxes(showscale=False)
             fig_skills.update_traces(hovertemplate="<b>%{y}</b><br>Credit Weight: %{x} hrs<extra></extra>")
-            apply_dark_theme(fig_skills, height=440)
+            apply_dark_theme(fig_skills, source=source_g2, height=440)
             st.plotly_chart(fig_skills, use_container_width=True)
+            render_source_caption(source_g2)
         else:
             st.info("No course data available.")
 
@@ -138,6 +141,7 @@ def render_tab_academic(selected_curricula: list = None):
     with col3:
         # Graph 1.3: Graduate Employment Timeline
         if not curricula_df.empty:
+            source_g3 = "MHESI Graduate Employment Status Survey & University Alumni Tracer Reports"
             emp_records = []
             for _, row in curricula_df.iterrows():
                 emp_records.append({"curriculum_name": row["curriculum_name"], "Timeline": "Year 1", "Employment_Rate": row["emp_rate_year_1"] * 100})
@@ -157,14 +161,16 @@ def render_tab_academic(selected_curricula: list = None):
             )
             fig_emp.update_yaxes(range=[70, 102])
             fig_emp.update_layout(legend=dict(orientation="h", yanchor="bottom", y=-0.35, xanchor="center", x=0.5))
-            apply_dark_theme(fig_emp, height=440)
+            apply_dark_theme(fig_emp, source=source_g3, height=440)
             st.plotly_chart(fig_emp, use_container_width=True)
+            render_source_caption(source_g3)
         else:
             st.info("No employment data available.")
 
     with col4:
         # Graph 1.4: Tuition Fee Structure Comparison
         if not curricula_df.empty:
+            source_g4 = "University Official Tuition Fee Announcements & Academic Regulations"
             fig_tuition = px.bar(
                 curricula_df.sort_values(by="tuition_fee_total_thb", ascending=True),
                 x="tuition_fee_total_thb",
@@ -180,8 +186,9 @@ def render_tab_academic(selected_curricula: list = None):
                 customdata=curricula_df.sort_values(by="tuition_fee_total_thb", ascending=True)[["institution"]]
             )
             fig_tuition.update_layout(legend=dict(orientation="h", yanchor="bottom", y=-0.3, xanchor="center", x=0.5))
-            apply_dark_theme(fig_tuition, height=440)
+            apply_dark_theme(fig_tuition, source=source_g4, height=440)
             st.plotly_chart(fig_tuition, use_container_width=True)
+            render_source_caption(source_g4)
         else:
             st.info("No tuition data available.")
 
@@ -201,3 +208,4 @@ def render_tab_academic(selected_curricula: list = None):
             use_container_width=True,
             hide_index=True
         )
+        render_source_caption("Official TQF-2 Program Documentation & University Course Catalogs")
